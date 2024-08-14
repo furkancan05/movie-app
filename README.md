@@ -25,7 +25,7 @@ Welcome to the **Movie App**, an Expo-based application built with React Native 
 
 You can download the latest version of the Movie App here:
 
-[Download Movie App APK](src/build-files/movie-app.apk)
+[Download Movie App APK](https://github.com/furkancan05/movie-app/releases/download/v1.1/movie-app.apk)
 
 ## Screenshots
 
