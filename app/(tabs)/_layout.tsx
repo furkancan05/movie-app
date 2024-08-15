@@ -24,7 +24,7 @@ export default function TabLayout() {
           <BlurView
             experimentalBlurMethod="dimezisBlurView"
             intensity={30}
-            className="flex-1 overflow-hidden "
+            className="flex-1 overflow-hidden"
           />
         ),
       }}

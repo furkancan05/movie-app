@@ -16,6 +16,7 @@ import { Icon } from "@/src/components/shared/Icon";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieCard from "@/src/components/MovieCard";
+import Loader from "@/src/components/Loader";
 
 // utils
 import api from "@/src/utils/fetchers";
@@ -37,7 +38,6 @@ import useHandleFavorites from "@/src/hooks/useHandleFavorites";
 
 // store
 import { useStore } from "@/src/store/store";
-import MovieDetailSkeleton from "@/src/components/MovieDetailSkeleton";
 
 export default function MovieDetail() {
   const { movie } = useLocalSearchParams();
@@ -118,10 +118,9 @@ export default function MovieDetail() {
           headerTransparent: true,
         }}
       />
-      {loading ? (
-        <MovieDetailSkeleton />
-      ) : movieDetail === null || movieDetail === undefined ? (
-        <View />
+
+      {loading || movieDetail === null || movieDetail === undefined ? (
+        <Loader />
       ) : (
         <ScrollView className="flex-1 bg-background">
           <Banner
@@ -199,7 +198,7 @@ export default function MovieDetail() {
                     <TouchableOpacity
                       onPress={() =>
                         router.push({
-                          pathname: "/castDetail",
+                          pathname: "/(tabs)/castDetail",
                           params: { castId: item.id },
                         })
                       }

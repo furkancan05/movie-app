@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Image, Text, ScrollView, FlatList } from "react-native";
-import { Link } from "expo-router";
 
 // components
-import { Icon } from "@/src/components/shared/Icon";
-import { LinearGradient } from "expo-linear-gradient";
 import MovieCard from "@/src/components/MovieCard";
 import Button from "@/src/components/shared/Button";
 import Loader from "@/src/components/Loader";
 import Swiper from "react-native-swiper";
+import { Link } from "expo-router";
+import { Icon } from "@/src/components/shared/Icon";
+import { LinearGradient } from "expo-linear-gradient";
 
 // hooks
 import useGetMovies from "@/src/hooks/useGetMovies";
@@ -109,7 +109,7 @@ function BannerMovie() {
                   <Button classname="mr-4">
                     <Link
                       href={{
-                        pathname: `/movieDetail`,
+                        pathname: `/(tabs)/movieDetail`,
                         params: { movie: JSON.stringify(movie) },
                       }}
                       className="font-semibold text-white"
@@ -159,7 +159,10 @@ function TrendingScroller(props: ITrendingScrollerProps) {
       <View className="flex-row justify-between">
         <Text className="text-white font-bold mb-4">{props.title}</Text>
         <Link
-          href={{ pathname: `/category`, params: { title: props.title } }}
+          href={{
+            pathname: `/(tabs)/category`,
+            params: { title: props.title },
+          }}
           className="text-primary"
         >
           See All

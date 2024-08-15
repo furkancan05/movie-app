@@ -1,41 +1,22 @@
 import React from "react";
-import {
-  Stack,
-  useLocalSearchParams,
-  router,
-  useFocusEffect,
-} from "expo-router";
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { Stack, useLocalSearchParams, router } from "expo-router";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // components
 import { Icon } from "@/src/components/shared/Icon";
 import { BlurView } from "expo-blur";
 import MovieCard from "@/src/components/MovieCard";
-import MovieDetailSkeleton from "@/src/components/MovieDetailSkeleton";
+import Loader from "@/src/components/Loader";
 
 // utils
-import { getImage } from "@/src/utils/getImage";
 import api from "@/src/utils/fetchers";
 
 // types
-import {
-  CastDetail as CastDetailType,
-  CastMovies,
-  Movie,
-  MovieResponse,
-} from "@/src/types/api.types";
+import { MovieResponse } from "@/src/types/api.types";
 
 // config
 import { constants } from "@/src/config/constants";
-import CategorySkeleton from "@/src/components/CategorySkeleton";
 
 export default function Category() {
   const { title } = useLocalSearchParams();
@@ -98,10 +79,6 @@ export default function Category() {
     setLoading(false);
   };
 
-  // React.useEffect(() => {
-  //   console.log(movies);
-  // }, [movies]);
-
   React.useEffect(() => {
     getMovies();
   }, []);
@@ -127,7 +104,7 @@ export default function Category() {
       />
 
       {loading ? (
-        <CategorySkeleton />
+        <Loader />
       ) : movies.results.length === 0 ? (
         <View className="w-full mt-24">
           <Text className="text-white/50 text-center text-base font-semibold">
