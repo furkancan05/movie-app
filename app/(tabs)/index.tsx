@@ -1,13 +1,14 @@
 import React from "react";
 import { View, Image, Text, ScrollView, FlatList } from "react-native";
-import { Link, useFocusEffect } from "expo-router";
+import { Link } from "expo-router";
 
 // components
 import { Icon } from "@/src/components/shared/Icon";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieCard from "@/src/components/MovieCard";
 import Button from "@/src/components/shared/Button";
-import Skeleton from "@/src/components/shared/Skeleton";
+import Loader from "@/src/components/Loader";
+import Swiper from "react-native-swiper";
 
 // hooks
 import useGetMovies from "@/src/hooks/useGetMovies";
@@ -27,6 +28,8 @@ import { constants } from "@/src/config/constants";
 export default function HomeScreen() {
   const { getMovies } = useGetMovies();
 
+  const [loading, setLoading] = React.useState(false);
+
   const setFavorites = useStore((store) => store.setFavorites);
 
   const getFavorites = async () => {
@@ -37,11 +40,20 @@ export default function HomeScreen() {
     setFavorites(JSON.parse(favorites));
   };
 
-  useFocusEffect(() => {
-    getMovies();
-    getFavorites();
-  });
+  const init = async () => {
+    setLoading(true);
 
+    await getMovies();
+    await getFavorites();
+
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    init();
+  }, []);
+
+  if (loading) return <Loader />;
   return (
     <View className="flex-1 bg-background">
       <ScrollView>
@@ -61,74 +73,76 @@ function BannerMovie() {
 
   const { handleFavorites } = useHandleFavorites();
 
-  const movie = React.useMemo(() => {
-    if (nowPlayingMovies.length === 0) return;
-
-    return nowPlayingMovies[
-      Math.floor(Math.random() * nowPlayingMovies.length) + 1
-    ];
-  }, [nowPlayingMovies]);
-
-  if (!movie)
-    return (
-      <View className="w-full aspect-[2/3] mb-14">
-        <Skeleton />
-      </View>
-    );
   return (
-    <View className="relative mb-14">
-      <Image
-        src={getImage(movie.poster_path)}
-        className="w-full aspect-[2/3] object-contain z-0"
-      />
-
-      <LinearGradient
-        colors={["rgba(0,0,0,0)", "rgba(0,0,0,1)"]}
-        className="absolute bottom-0 left-0 w-full gap-3 py-3 z-10 m-0"
+    <View className="w-full aspect-[2/3]">
+      <Swiper
+        showsButtons={false}
+        showsPagination={false}
+        loop={true}
+        autoplay={true}
+        autoplayTimeout={4}
       >
-        <View className="flex-row">
-          <Icon name="star" color="yellow" size={16} />
-          <Text className="font-semibold text-white ml-2">
-            {movie.vote_average.toFixed(1)}
-          </Text>
-        </View>
+        {nowPlayingMovies.map((movie) => {
+          return (
+            <View key={movie.id} className="flex-1 relative mb-14">
+              <Image
+                src={getImage(movie.poster_path)}
+                className="w-full h-full object-contain z-0"
+              />
 
-        <Text className="font-bold text-lg text-white">
-          {movie.original_title}
-        </Text>
+              <LinearGradient
+                colors={["rgba(0,0,0,0)", "rgba(0,0,0,1)"]}
+                className="absolute bottom-0 left-0 w-full gap-3 py-3 z-10 m-0"
+              >
+                <View className="flex-row">
+                  <Icon name="star" color="yellow" size={16} />
+                  <Text className="font-semibold text-white ml-2">
+                    {movie.vote_average.toFixed(1)}
+                  </Text>
+                </View>
 
-        <View className="flex-row">
-          <Button classname="mr-4">
-            <Link
-              href={{
-                pathname: `/movieDetail`,
-                params: { movie: JSON.stringify(movie) },
-              }}
-              className="font-semibold text-white"
-            >
-              View Details
-            </Link>
-          </Button>
+                <Text className="font-bold text-lg text-white">
+                  {movie.original_title}
+                </Text>
 
-          <Button
-            type="border"
-            onClick={() => handleFavorites(movie)}
-            classname="p-1"
-          >
-            <Icon
-              name={
-                favorites.some((fav) => fav.id === movie.id)
-                  ? "heart"
-                  : "heart-outline"
-              }
-              size={26}
-              color={
-                favorites.some((fav) => fav.id === movie.id) ? "red" : "black"
-              }
-            />
-          </Button>
-        </View>
-      </LinearGradient>
+                <View className="flex-row">
+                  <Button classname="mr-4">
+                    <Link
+                      href={{
+                        pathname: `/movieDetail`,
+                        params: { movie: JSON.stringify(movie) },
+                      }}
+                      className="font-semibold text-white"
+                    >
+                      View Details
+                    </Link>
+                  </Button>
+
+                  <Button
+                    type="border"
+                    onClick={() => handleFavorites(movie)}
+                    classname="p-1"
+                  >
+                    <Icon
+                      name={
+                        favorites.some((fav) => fav.id === movie.id)
+                          ? "heart"
+                          : "heart-outline"
+                      }
+                      size={26}
+                      color={
+                        favorites.some((fav) => fav.id === movie.id)
+                          ? "red"
+                          : "white"
+                      }
+                    />
+                  </Button>
+                </View>
+              </LinearGradient>
+            </View>
+          );
+        })}
+      </Swiper>
     </View>
   );
 }
@@ -139,13 +153,6 @@ interface ITrendingScrollerProps {
 
 function TrendingScroller(props: ITrendingScrollerProps) {
   const { movies } = useGetTrendingMovies({ title: props.title });
-
-  if (movies.length === 0)
-    return (
-      <View className="w-full h-44 mb-14">
-        <Skeleton />
-      </View>
-    );
 
   return (
     <View className="mb-14 px-5">
