@@ -143,7 +143,7 @@ export default function CastDetail() {
             <Text className="text-grey">{castDetail.biography}</Text>
 
             {/* Movies */}
-            <View className="w-full mt-8">
+            <View className="w-full mt-8 mb-20">
               <Text className="text-white font-semibold mb-2">Movies</Text>
               {castMovies ? (
                 <FlatList

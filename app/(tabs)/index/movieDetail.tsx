@@ -17,6 +17,7 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieCard from "@/src/components/MovieCard";
 import Loader from "@/src/components/Loader";
+import ImageView from "react-native-image-viewing";
 
 // utils
 import api from "@/src/utils/fetchers";
@@ -38,6 +39,7 @@ import useHandleFavorites from "@/src/hooks/useHandleFavorites";
 
 // store
 import { useStore } from "@/src/store/store";
+import { ImageSource } from "react-native-image-viewing/dist/@types";
 
 export default function MovieDetail() {
   const { movie } = useLocalSearchParams();
@@ -101,6 +103,9 @@ export default function MovieDetail() {
     }m`;
   }, [movieDetail]);
 
+  const [visible, setIsVisible] = React.useState(false);
+  const [image, setImage] = React.useState("");
+
   return (
     <View className="flex-1">
       <Stack.Screen
@@ -109,7 +114,7 @@ export default function MovieDetail() {
             <BlurView
               experimentalBlurMethod="dimezisBlurView"
               intensity={50}
-              className="p-3 rounded-full overflow-hidden bg-black/20"
+              className="p-2 rounded-full overflow-hidden bg-black/20"
             >
               <Icon name="chevron-back" onPress={() => router.back()} />
             </BlurView>
@@ -166,6 +171,20 @@ export default function MovieDetail() {
               </View>
             </View>
 
+            <ImageView
+              images={[
+                {
+                  uri: image,
+                },
+              ]}
+              imageIndex={0}
+              key={image}
+              doubleTapToZoomEnabled={true}
+              swipeToCloseEnabled={true}
+              visible={visible}
+              onRequestClose={() => setIsVisible(false)}
+            />
+
             {/* Images */}
             <View className="w-full">
               <Text className="text-white font-semibold mb-2">Images</Text>
@@ -176,10 +195,17 @@ export default function MovieDetail() {
                   horizontal
                   ItemSeparatorComponent={() => <View className="w-3" />}
                   renderItem={({ item }) => (
-                    <Image
-                      source={{ uri: getImage(item.file_path) }}
-                      className="rounded-md h-44 aspect-video"
-                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        setImage(getImage(item.file_path));
+                        setIsVisible(true);
+                      }}
+                    >
+                      <Image
+                        source={{ uri: getImage(item.file_path) }}
+                        className="rounded-md h-44 aspect-video"
+                      />
+                    </TouchableOpacity>
                   )}
                 />
               ) : null}
@@ -219,7 +245,7 @@ export default function MovieDetail() {
             </View>
 
             {/* Similar Movies */}
-            <View className="w-full mt-8">
+            <View className="w-full mt-8 mb-20">
               <Text className="text-white font-semibold mb-2">
                 Similar Contents
               </Text>

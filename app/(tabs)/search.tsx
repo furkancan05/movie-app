@@ -16,12 +16,15 @@ import api from "@/src/utils/fetchers";
 import useDebounce from "@/src/hooks/useDebounce";
 
 // store
+import { useStore } from "@/src/store/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // configs
 import { constants } from "@/src/config/constants";
 
 export default function SearchScreen() {
+  const popularMovies = useStore((store) => store.popularMovies);
+
   const [search, setSearch] = React.useState("");
   const [focused, setFocused] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -31,6 +34,18 @@ export default function SearchScreen() {
     total_results: 0,
     results: [],
   });
+
+  React.useEffect(() => {
+    if (search) return;
+
+    console.log("girdi");
+
+    setMovies({ ...movies, results: popularMovies });
+  }, [search]);
+
+  React.useEffect(() => {
+    console.log(movies.results.length);
+  }, [movies]);
 
   const { debouncedValue } = useDebounce(search, 500);
 
@@ -83,13 +98,7 @@ export default function SearchScreen() {
   };
 
   React.useEffect(() => {
-    if (!debouncedValue)
-      return setMovies({
-        page: 0,
-        total_pages: 0,
-        total_results: 0,
-        results: [],
-      });
+    if (!debouncedValue) return;
 
     handleSearch(debouncedValue);
   }, [debouncedValue]);

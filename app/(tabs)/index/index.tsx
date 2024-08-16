@@ -69,9 +69,6 @@ export default function HomeScreen() {
 
 function BannerMovie() {
   const nowPlayingMovies = useStore((store) => store.nowPlaying);
-  const favorites = useStore((store) => store.favorites);
-
-  const { handleFavorites } = useHandleFavorites();
 
   return (
     <View className="w-full aspect-[2/3]">
@@ -84,60 +81,49 @@ function BannerMovie() {
       >
         {nowPlayingMovies.map((movie) => {
           return (
-            <View key={movie.id} className="flex-1 relative mb-14">
+            <View
+              key={movie.id}
+              className="flex-1 relative mb-14 w-full bg-red-500"
+            >
               <Image
                 src={getImage(movie.poster_path)}
-                className="w-full h-full object-contain z-0"
+                className="w-full h-full z-0"
               />
 
               <LinearGradient
                 colors={["rgba(0,0,0,0)", "rgba(0,0,0,1)"]}
-                className="absolute bottom-0 left-0 w-full gap-3 py-3 z-10 m-0"
+                className="absolute bottom-0 left-0 w-full flex-row items-end justify-between gap-3 py-3 z-10 m-0"
               >
-                <View className="flex-row">
-                  <Icon name="star" color="yellow" size={16} />
-                  <Text className="font-semibold text-white ml-2">
-                    {movie.vote_average.toFixed(1)}
+                <View className="flex-col w-1/2">
+                  <View className="flex-row">
+                    <Icon name="star" color="yellow" size={26} />
+                    <Text className="font-semibold text-white ml-1 text-lg">
+                      {movie.vote_average.toFixed(1)}
+                    </Text>
+                  </View>
+
+                  <Text className="font-bold text-2xl text-white">
+                    {movie.original_title}
                   </Text>
                 </View>
 
-                <Text className="font-bold text-lg text-white">
-                  {movie.original_title}
-                </Text>
-
-                <View className="flex-row">
-                  <Button classname="mr-4">
-                    <Link
-                      href={{
-                        pathname: `/(tabs)/movieDetail`,
-                        params: { movie: JSON.stringify(movie) },
-                      }}
-                      className="font-semibold text-white"
-                    >
-                      View Details
-                    </Link>
-                  </Button>
-
-                  <Button
-                    type="border"
-                    onClick={() => handleFavorites(movie)}
-                    classname="p-1"
+                <Button classname="mr-4 flex-row items-center">
+                  <Link
+                    href={{
+                      pathname: `/(tabs)/movieDetail`,
+                      params: { movie: JSON.stringify(movie) },
+                    }}
+                    className="font-semibold text-white mt-1"
                   >
-                    <Icon
-                      name={
-                        favorites.some((fav) => fav.id === movie.id)
-                          ? "heart"
-                          : "heart-outline"
-                      }
-                      size={26}
-                      color={
-                        favorites.some((fav) => fav.id === movie.id)
-                          ? "red"
-                          : "white"
-                      }
-                    />
-                  </Button>
-                </View>
+                    View Details
+                  </Link>
+
+                  <Icon
+                    name="chevron-forward-outline"
+                    color="white"
+                    size={20}
+                  />
+                </Button>
               </LinearGradient>
             </View>
           );
