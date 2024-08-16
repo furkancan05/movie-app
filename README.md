@@ -31,14 +31,15 @@ You can download the latest version of the Movie App here:
 
 Here are some screenshots of the app:
 
-<img src="src/screenshots/1.png" alt="Screenshot 1" width="400"/>
-<img src="src/screenshots/2.png" alt="Screenshot 2" width="400"/>
-<img src="src/screenshots/3.png" alt="Screenshot 3" width="400"/>
-<img src="src/screenshots/4.png" alt="Screenshot 4" width="400"/>
-<img src="src/screenshots/5.png" alt="Screenshot 5" width="400"/>
-<img src="src/screenshots/6.png" alt="Screenshot 6" width="400"/>
-<img src="src/screenshots/7.png" alt="Screenshot 7" width="400"/>
-<img src="src/screenshots/8.png" alt="Screenshot 8" width="400"/>
+<p float="left">
+<img src="src/screenshots/1.png" alt="Screenshot 1" width="200"/>
+<img src="src/screenshots/2.png" alt="Screenshot 2" width="200"/>
+<img src="src/screenshots/3.png" alt="Screenshot 3" width="200"/>
+<img src="src/screenshots/4.png" alt="Screenshot 4" width="200"/>
+<img src="src/screenshots/5.png" alt="Screenshot 5" width="200"/>
+<img src="src/screenshots/6.png" alt="Screenshot 6" width="200"/>
+<img src="src/screenshots/7.png" alt="Screenshot 7" width="200"/>
+</p>
 
 ## Getting Started
 
